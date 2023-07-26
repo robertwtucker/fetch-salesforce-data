@@ -12,6 +12,10 @@
   "license": "MIT",
   "devDependencies": {
     "@quadient/evolve-scripting-api": "^0.0.39",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
+    "eslint": "^8.45.0",
+    "prettier": "3.0.0",
     "typescript": "^4.9.5"
   },
   "dependencies": {
