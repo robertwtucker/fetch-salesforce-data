@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "build": "bb b -m 0 -b 0",
-    "script-upload": "swarm script upload"
+    "script-upload": "swarm script upload",
+    "lint": "eslint . --ext .ts --ignore-pattern .gitignore"
   },
   "main": "src/index.ts",
   "license": "MIT",
