@@ -30,10 +30,8 @@ export function getDescription(): ScriptDescription {
       {
         id: 'targetDataPath',
         displayName: 'targetDataPath',
-        description:
-          'The output path for the JSON file containing the data retreived.',
-        defaultValue: 'map://data/target.json',
-        type: 'String',
+        description: 'The output file to write the JSON data retrieved to.',
+        type: 'OutputResource',
         required: true,
       },
     ],
