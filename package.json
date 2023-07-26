@@ -3,12 +3,13 @@
   "version": "0.0.1",
   "description": "An Evolve component for integrating with salesforce.com",
   "type": "module",
-  "main": "src/index.ts",
   "private": true,
   "scripts": {
     "build": "bb b -m 0 -b 0",
     "script-upload": "swarm script upload"
   },
+  "main": "src/index.ts",
+  "license": "MIT",
   "devDependencies": {
     "typescript": "^4.9.5",
     "@quadient/evolve-scripting-api": "^0.0.39"
