@@ -83,5 +83,5 @@ export async function execute(context: Context): Promise<void> {
  * @returns A fully formed URL with extra slashes stripped
  */
 function prepareUrl(host: string, endpointUrl: string): string {
-  return `${host.replace(/\/+$/, '')}/${endpointUrl.replace(/^\//, '')}`
+  return `${host}${endpointUrl.replace(/^\//, '')}`
 }
