@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { StringReadableStream } from '@quadient/evolve-data-transformations'
-
 export function getDescription(): ScriptDescription {
   return {
     description:
@@ -40,43 +38,20 @@ export function getDescription(): ScriptDescription {
 }
 
 export async function execute(context: Context): Promise<void> {
-  // Call the Salesforce API
-  //
   const url = prepareUrl(
     context.parameters.salesforceConnector as string,
     context.parameters.salesforceEndpointUrl as string
   )
-  const headers = new Headers()
-  headers.append('Accept', 'application/json')
-
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: headers,
-  })
-
-  const json = await response.json()
-  if (!response.ok) {
-    throw new Error(
-      `Non-OK API response: ${response.status} ${
-        response.statusText
-      }: ${JSON.stringify(json, null, 2)}`
-    )
-  }
-
-  // Write the response data to the output file specified in the
-  // `targetDataPath` parameter.
-  //
-  const inputStream = new StringReadableStream(JSON.stringify(json))
-  const outputStream = await context.openWriteText(
+  const data = await getSalesforceData(url)
+  await saveDataToFile(
+    context,
+    data,
     context.parameters.targetDataPath as string
   )
-
-  console.log(`Writing response data to ${context.parameters.targetDataPath}`)
-  await inputStream.pipeTo(outputStream)
 }
 
 /**
- * A helper function to prepare the URL for the Salesforce API call
+ * A helper function to prepare the URL for the Salesforce API call.
  *
  * @param host The host configured in the web endpoint connector
  * @param endpointUrl The endpoint URL supplied in the input parameters
@@ -84,4 +59,49 @@ export async function execute(context: Context): Promise<void> {
  */
 function prepareUrl(host: string, endpointUrl: string): string {
   return `${host}${endpointUrl.replace(/^\//, '')}`
+}
+
+/**
+ * Call the Salesforce API and return the JSON data (as a string).
+ *
+ * @param url The Salesforce API endpoint URL
+ * @returns A string containing the JSON data
+ */
+async function getSalesforceData(url: string): Promise<string> {
+  const headers = new Headers()
+  headers.append('Accept', 'application/json')
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headers,
+    })
+
+    if (!response.ok) {
+      throw new Error(
+        `Non-OK API response from Salesforce: ${response.status} ${response.statusText}: ${response.body}`
+      )
+    }
+
+    return await response.text()
+  } catch (err) {
+    throw new Error(`Unable to retrieve data from Salesforce: ${err}`)
+  }
+}
+
+/**
+ * Saves the data retrieved from the Salesforce API call to a file.
+ *
+ * @param context The Evolve context
+ * @param data A string containing the JSON data to be written to the file
+ * @param path The path to the output file to write the data
+ */
+async function saveDataToFile(
+  context: Context,
+  data: string,
+  path: string
+): Promise<void> {
+  const outputFile = context.getFile(path)
+  await outputFile.write(data)
+  console.log(`Wrote response data to ${path}`)
 }
