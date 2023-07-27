@@ -8,21 +8,21 @@ import { StringReadableStream } from '@quadient/evolve-data-transformations'
 export function getDescription(): ScriptDescription {
   return {
     description:
-      'Evolve script for integration with Salesforce.com. Fetches an arbitrary set of data (JSON format) using the salesforce.com APIs.',
+      'Evolve script for integration with Salesforce.com. Fetches an arbitrary set of data (JSON format) using the Salesforce.com APIs.',
     icon: 'script',
     input: [
       {
         id: 'salesforceConnector',
         displayName: 'salesforceConnector',
         description:
-          'The web endpoint connector configured with the URL for the Salesforce instance to use.',
+          "The Evolve connector (web endpoint) configured with the Salesforce instance's host URL.",
         type: 'Connector',
         required: true,
       },
       {
         id: 'salesforceEndpointUrl',
         displayName: 'salesforceEndpointUrl',
-        description: 'The Salesforce API endpoint URL to use.',
+        description: 'The Salesforce API endpoint URL.',
         type: 'String',
         defaultValue: '/services/data/v54.0/sobjects/',
         required: true,
@@ -30,7 +30,7 @@ export function getDescription(): ScriptDescription {
       {
         id: 'targetDataPath',
         displayName: 'targetDataPath',
-        description: 'The output file to write the JSON data retrieved to.',
+        description: 'The output file to write the data retrieved (JSON) in.',
         type: 'OutputResource',
         required: true,
       },
@@ -40,6 +40,8 @@ export function getDescription(): ScriptDescription {
 }
 
 export async function execute(context: Context): Promise<void> {
+  // Call the Salesforce API
+  //
   const url = prepareUrl(
     context.parameters.salesforceConnector as string,
     context.parameters.salesforceEndpointUrl as string
@@ -47,10 +49,8 @@ export async function execute(context: Context): Promise<void> {
   const headers = new Headers()
   headers.append('Accept', 'application/json')
 
-  // Call the Salesforce API
-  console.debug(`Fetching data from ${url}`)
   const response = await fetch(url, {
-    method: 'POST',
+    method: 'GET',
     headers: headers,
   })
 
@@ -64,14 +64,14 @@ export async function execute(context: Context): Promise<void> {
   }
 
   // Write the response data to the output file specified in the
-  // `outputDataFile` parameter.
+  // `targetDataPath` parameter.
   //
   const inputStream = new StringReadableStream(JSON.stringify(json))
   const outputStream = await context.openWriteText(
-    context.parameters.outputDataFile as string
+    context.parameters.targetDataPath as string
   )
 
-  console.log(`Writing response data to ${context.parameters.outputDataFile}`)
+  console.log(`Writing response data to ${context.parameters.targetDataPath}`)
   await inputStream.pipeTo(outputStream)
 }
 
