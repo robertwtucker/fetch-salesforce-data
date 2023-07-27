@@ -1,6 +1,6 @@
 {
   "name": "fetch-salesforce-data",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "An Evolve component for integrating with salesforce.com",
   "type": "module",
   "private": true,

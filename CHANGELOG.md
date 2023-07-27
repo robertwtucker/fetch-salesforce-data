@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- _Pending initial release_
+- N/A
 
-[unreleased]: https://github.com/robertwtucker/fetch-salesforce-data
+## [1.0.0] - 2023-07-26
+
+### Added
+
+- Initial release ([#2](https://github.com/robertwtucker/fetch-salesforce-data/pull/2))
+- CI scripts for project ([#1](https://github.com/robertwtucker/fetch-salesforce-data/pull/1))
+
+[unreleased]: https://github.com/robertwtucker/fetch-salesforce-data/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/robertwtucker/fetch-salesforce-data/releases/tag/v1.0.0
