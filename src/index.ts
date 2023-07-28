@@ -10,19 +10,12 @@ export function getDescription(): ScriptDescription {
     icon: 'script',
     input: [
       {
-        id: 'salesforceConnector',
-        displayName: 'salesforceConnector',
+        id: 'salesforceEndpoint',
+        displayName: 'Salesforce endpoint',
         description:
-          "The Evolve connector (web endpoint) configured with the Salesforce instance's host URL.",
+          "The web endpoint connector configured with the appropriate Salesforce instance's host and endpoint URL.",
         type: 'Connector',
-        required: true,
-      },
-      {
-        id: 'salesforceEndpointUrl',
-        displayName: 'salesforceEndpointUrl',
-        description: 'The Salesforce API endpoint URL.',
-        type: 'String',
-        defaultValue: '/services/data/v54.0/sobjects/',
+        defaultValue: 'services/data/v54.0/sobjects/',
         required: true,
       },
       {
@@ -38,27 +31,13 @@ export function getDescription(): ScriptDescription {
 }
 
 export async function execute(context: Context): Promise<void> {
-  const url = prepareUrl(
-    context.parameters.salesforceConnector as string,
-    context.parameters.salesforceEndpointUrl as string
-  )
+  const url = context.parameters.salesforceEndpoint as string
   const data = await getSalesforceData(url)
   await saveDataToFile(
     context,
     data,
     context.parameters.targetDataPath as string
   )
-}
-
-/**
- * A helper function to prepare the URL for the Salesforce API call.
- *
- * @param host The host configured in the web endpoint connector
- * @param endpointUrl The endpoint URL supplied in the input parameters
- * @returns A fully formed URL with extra slashes stripped
- */
-function prepareUrl(host: string, endpointUrl: string): string {
-  return `${host}${endpointUrl.replace(/^\//, '')}`
 }
 
 /**
