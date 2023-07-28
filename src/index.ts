@@ -19,8 +19,8 @@ export function getDescription(): ScriptDescription {
         required: true,
       },
       {
-        id: 'targetDataPath',
-        displayName: 'targetDataPath',
+        id: 'outputDataFile',
+        displayName: 'Output data file',
         description: 'The output file to write the data retrieved (JSON) in.',
         type: 'OutputResource',
         required: true,
@@ -36,7 +36,7 @@ export async function execute(context: Context): Promise<void> {
   await saveDataToFile(
     context,
     data,
-    context.parameters.targetDataPath as string
+    context.parameters.outputDataFile as string
   )
 }
 
